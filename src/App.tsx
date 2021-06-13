@@ -1,7 +1,6 @@
 import ExchangePage from "pages/exchange.page";
 import React from "react";
 import styled from "styled-components";
-import spacings from "./global-styles";
 import "./App.scss";
 
 const Background = styled.main`
@@ -17,9 +16,6 @@ const Background = styled.main`
 function App() {
   return (
     <Background>
-      {spacings.map((Style) => (
-        <Style />
-      ))}
       <ExchangePage />
     </Background>
   );

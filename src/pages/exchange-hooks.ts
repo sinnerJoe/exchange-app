@@ -11,7 +11,7 @@ export function useExchangeRatePoller() {
     dispatch(fetchRates());
     intervalRef.current = setInterval(() => {
       dispatch(fetchRates());
-    }, 30000);
+    }, 10000);
     return () => clearInterval(intervalRef.current);
   }, []);
 }
