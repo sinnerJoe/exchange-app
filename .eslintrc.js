@@ -5,7 +5,8 @@ module.exports = {
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "no-param-reassign": "off",
         "react/require-default-props": "off",
-        "@typescript-eslint/no-empty-interface": "off"
+        "@typescript-eslint/no-empty-interface": "off",
+        "react-hooks/exhaustive-deps": "off"
     },
     "settings": {
       "prettier": {

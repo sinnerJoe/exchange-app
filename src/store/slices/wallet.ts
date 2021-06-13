@@ -23,6 +23,10 @@ export const walletSlice = createSlice({
       currency: "USD",
       amount: 1000,
     },
+    EUR: {
+      currency: "EUR",
+      amount: 5000,
+    },
   } as WalletSlice,
   reducers: {
     decreaseBy: (

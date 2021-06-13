@@ -6,14 +6,36 @@ import React, {
   useEffect,
 } from "react";
 import styled from "styled-components";
-import preprocess from "./text-transform";
-import { hasInvalidCharacters, hasMultipleDots } from "./validators";
+import preprocess, { toStringWithMostlyTwoDecimals } from "./text-transform";
+import {
+  hasInvalidCharacters,
+  hasMultipleDots,
+  hasTooManyDecimals,
+} from "./validators";
+
+const textSize = "40px";
 
 const Input = styled.input`
+  outline: none;
   background-color: transparent;
   border-top: none;
   border-left: none;
   border-right: none;
+  color: var(--white);
+  font-size: ${textSize};
+  max-width: 250px;
+  -moz-appearance: textfield !important;
+
+  ::-webkit-inner-spin-button,
+  ::-webkit-outer-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0;
+  }
+`;
+
+const Sign = styled.span`
+  font-size: ${textSize};
+  margin-right: 5px;
 `;
 
 const Wrapper = styled.div`
@@ -33,20 +55,26 @@ export default function NumericInput({
   value,
   ...rest
 }: Props): ReactElement {
-  const [stringState, setStringState] = useState(String(value || 0));
+  const [stringState, setStringState] = useState(
+    toStringWithMostlyTwoDecimals(value || 0)
+  );
 
   useEffect(() => {
-    setStringState(String(value));
+    if (Number(stringState) !== value)
+      setStringState(toStringWithMostlyTwoDecimals(value || 0));
   }, [value]);
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const { value: elementValue } = event.target;
-      if (hasMultipleDots(elementValue) || hasInvalidCharacters(elementValue)) {
+      if (
+        hasMultipleDots(elementValue) ||
+        hasInvalidCharacters(elementValue) ||
+        hasTooManyDecimals(elementValue)
+      ) {
         return;
       }
 
       const preprocessedString = preprocess(elementValue);
-      console.log(elementValue);
       setStringState(preprocessedString);
       if (!preprocessedString.endsWith(".")) {
         onChange(Number(preprocessedString));
@@ -57,8 +85,13 @@ export default function NumericInput({
 
   return (
     <Wrapper>
-      <span>{sign}</span>
-      <Input onChange={handleChange} value={stringState} {...rest} />
+      <Sign>{sign}</Sign>
+      <Input
+        type="number"
+        onChange={handleChange}
+        value={stringState}
+        {...rest}
+      />
     </Wrapper>
   );
 }

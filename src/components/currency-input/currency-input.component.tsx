@@ -1,6 +1,8 @@
 import React, { ReactElement } from "react";
 import NumericInput from "components/numeric-input";
+import { LoadingOutlined } from "@ant-design/icons";
 import styled from "styled-components";
+import getSymbolFromCurrency from "currency-map-symbol";
 
 interface Props {
   amount: number;
@@ -10,11 +12,30 @@ interface Props {
   onChange: (value: number) => void;
   conversionRate?: number;
   isDestination: boolean;
+  loadingExchangeRate?: boolean;
 }
 
-const Flex = styled.div`
+const Container = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: var(--white);
+`;
+
+const SecondaryText = styled.div`
+  color: var(--secondary-white);
+`;
+
+const CurrencyName = styled.h1`
+  color: var(--white);
+`;
+
+const ExchangeRate = styled.div`
+  color: var(--secondary-white);
+  margin-top: 15px;
+  margin-left: 20px;
 `;
 
 export default function CurrencyInput({
@@ -25,15 +46,18 @@ export default function CurrencyInput({
   mainCurrency,
   conversionRate,
   isDestination,
+  loadingExchangeRate,
 }: Props): ReactElement {
+  const mainCurrencySymbol = getSymbolFromCurrency(mainCurrency);
+  const comparedCurrencySymbol = getSymbolFromCurrency(comparedCurrency);
   return (
-    <Flex>
+    <Container>
       <div>
-        <h2>{mainCurrency}</h2>
-        <div>
-          You have {mainCurrency}
-          {walletAmount}
-        </div>
+        <CurrencyName>{mainCurrency}</CurrencyName>
+        <SecondaryText>
+          You have {mainCurrencySymbol}
+          {walletAmount.toFixed(2)}
+        </SecondaryText>
       </div>
 
       <div>
@@ -42,13 +66,14 @@ export default function CurrencyInput({
           value={amount}
           onChange={onChange}
         />
-        {isDestination && (
-          <div>
-            {mainCurrency}1 = {conversionRate}
-            {comparedCurrency}
-          </div>
+        {isDestination && !loadingExchangeRate && (
+          <ExchangeRate>
+            {comparedCurrencySymbol}1 = {mainCurrencySymbol}
+            {conversionRate?.toFixed(2)}
+          </ExchangeRate>
         )}
+        {loadingExchangeRate && <LoadingOutlined />}
       </div>
-    </Flex>
+    </Container>
   );
 }
