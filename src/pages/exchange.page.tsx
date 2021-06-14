@@ -50,7 +50,6 @@ export default function ExchangePage(): ReactElement {
   const dispatch = useDispatch();
 
   const walletList = useWalletList();
-  const walletCount = walletList.length;
   const [destWalletIndex, setDestWalletIndex] = useState(1);
   const [sourceWalletIndex, setSourceWalletIndex] = useState(0);
   const fromCurrency = walletList[sourceWalletIndex].currency;
@@ -64,7 +63,7 @@ export default function ExchangePage(): ReactElement {
         destCarousel.current?.next();
       }
     },
-    [walletCount, destWalletIndex]
+    [destWalletIndex]
   );
   const changeDestWallet = useCallback(
     (from: number, to: number) => {
@@ -73,7 +72,7 @@ export default function ExchangePage(): ReactElement {
         sourceCarousel.current?.next();
       }
     },
-    [walletCount, sourceWalletIndex]
+    [sourceWalletIndex]
   );
 
   const exchangeData = useExchange(fromCurrency, toCurrency);
